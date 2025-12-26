@@ -144,6 +144,6 @@ describe('checkout.controller', () => {
     await checkoutCtrl.createPaymentIntent(req, res)
 
     expect(res.statusCode).toBe(503)
-    expect(res.body).toEqual({ error: 'Stripe is not configured (missing STRIPE_TEST_SECRET_KEY)' })
+    expect(res.body).toEqual({ error: 'Stripe is not configured (missing STRIPE_TEST_SECRET_KEY / STRIPE_SECRET_KEY)' })
   })
 })

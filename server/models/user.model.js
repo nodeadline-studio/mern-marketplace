@@ -77,8 +77,5 @@ UserSchema.methods = {
   }
 }
 
-// Index for faster email lookups
-UserSchema.index({ email: 1 })
-
 export default mongoose.model('User', UserSchema)
 

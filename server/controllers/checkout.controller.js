@@ -8,7 +8,7 @@ const myStripe = stripe(config.stripe_test_secret_key)
 const ensureStripeConfigured = (res) => {
   // Template-safe behavior: make missing Stripe configuration a clear 503
   if (!config.stripe_test_secret_key) {
-    res.status(503).json({ error: 'Stripe is not configured (missing STRIPE_TEST_SECRET_KEY)' })
+    res.status(503).json({ error: 'Stripe is not configured (missing STRIPE_TEST_SECRET_KEY / STRIPE_SECRET_KEY)' })
     return false
   }
   return true

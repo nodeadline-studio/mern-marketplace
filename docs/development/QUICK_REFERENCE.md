@@ -1,14 +1,14 @@
 # Service Marketplace - Quick Reference Guide
 
-**For:** Senior Development System Architect  
+**For:** Senior Development System Architect
 **Purpose:** Quick access to key information during development
 
 ---
 
 ## 🎯 Current Status
 
-**Foundation:** MERN Marketplace 2.0 (MIT License) ✅ Cloned  
-**Repository:** `/Users/tommykuznets/Downloads/My Projects/service-marketplace`  
+**Foundation:** MERN Marketplace 2.0 (MIT License) ✅ Cloned
+**Repository:** `/Users/tommykuznets/Downloads/My Projects/service-marketplace`
 **Status:** Ready for Week 1 development
 
 ---
@@ -75,13 +75,9 @@ client/order/            → (update for service orders)
 ```bash
 # Install dependencies
 npm install
-cd client && npm install
-cd ../server && npm install
 
 # Development
-npm run development      # Run both frontend and backend
-cd server && npm run dev  # Backend only
-cd client && npm start    # Frontend only
+npm run dev              # Dev server (Express + webpack HMR)
 
 # Build
 npm run build
@@ -96,19 +92,17 @@ npm start
 
 **server/.env:**
 ```env
-PORT=5000
+PORT=5001
 MONGODB_URI=mongodb://localhost:27017/service-marketplace
 JWT_SECRET=your_secret
 JWT_EXPIRES_IN=30d
-STRIPE_SECRET_KEY=sk_test_...
+STRIPE_TEST_SECRET_KEY=sk_test_...
+STRIPE_PUBLISHABLE_KEY=pk_test_...
 FRONTEND_URL=http://localhost:3000
 ```
 
 **client/.env:**
-```env
-REACT_APP_API_URL=http://localhost:5000/api
-REACT_APP_STRIPE_PUBLISHABLE_KEY=pk_test_...
-```
+Not required for Stripe. The publishable key is injected by the server into `window.STRIPE_PUBLISHABLE_KEY`.
 
 ---
 
@@ -274,6 +268,6 @@ REACT_APP_STRIPE_PUBLISHABLE_KEY=pk_test_...
 
 ---
 
-**Last Updated:** December 2025  
+**Last Updated:** December 2025
 **Status:** Ready for Week 1 Development
 

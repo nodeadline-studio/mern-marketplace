@@ -10,13 +10,14 @@ export default function Profile() {
   const [user, setUser] = useState({ sellerProfile: {} })
   const [redirectToSignin, setRedirectToSignin] = useState(false)
   const jwt = auth.isAuthenticated()
+  const token = jwt ? jwt.token : null
 
   useEffect(() => {
     const abortController = new AbortController()
     const signal = abortController.signal
     read({
       userId: userId
-    }, { t: jwt.token }, signal).then((data) => {
+    }, { t: token }, signal).then((data) => {
       if (data && data.error) {
         setRedirectToSignin(true)
       } else {
@@ -33,7 +34,7 @@ export default function Profile() {
     return <Navigate to='/signin' replace />
   }
 
-  const isSelf = auth.isAuthenticated().user && auth.isAuthenticated().user._id == user._id
+  const isSelf = !!(jwt && jwt.user && jwt.user._id == user._id)
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">

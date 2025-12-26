@@ -1,18 +1,25 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Navigate, useLocation } from 'react-router-dom'
 import auth from './../auth/auth-helper'
 import { listByBuyer } from './api-order.js'
 
 export default function MyOrders() {
   const [orders, setOrders] = useState([])
   const jwt = auth.isAuthenticated()
+  const location = useLocation()
+  const userId = jwt && jwt.user ? jwt.user._id : null
+  const token = jwt ? jwt.token : null
 
   useEffect(() => {
+    if (!userId || !token) {
+      return
+    }
+
     const abortController = new AbortController()
     const signal = abortController.signal
     listByBuyer({
-      userId: jwt.user._id
-    }, { t: jwt.token }, signal).then((data) => {
+      userId
+    }, { t: token }, signal).then((data) => {
       if (data && data.error) {
         console.debug(data.error)
       } else {
@@ -22,7 +29,21 @@ export default function MyOrders() {
     return function cleanup() {
       abortController.abort()
     }
-  }, [jwt.user._id, jwt.token])
+  }, [userId, token])
+
+  if (!userId) {
+    if (location?.pathname === '/myorders') {
+      return <Navigate to='/signin' replace />
+    }
+    return (
+      <div className="p-8 text-center">
+        <p className="text-gray-500 font-medium">Sign in to view your orders.</p>
+        <Link to="/signin" className="text-primary font-bold hover:underline mt-2 inline-block">
+          Go to sign in
+        </Link>
+      </div>
+    )
+  }
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-12">
@@ -51,8 +72,8 @@ export default function MyOrders() {
                       Order #{order._id.substring(order._id.length - 8).toUpperCase()}
                     </span>
                     <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${order.status === 'completed' ? 'bg-green-100 text-green-600' :
-                        order.status === 'cancelled' ? 'bg-red-100 text-red-600' :
-                          'bg-blue-100 text-blue-600'
+                      order.status === 'cancelled' ? 'bg-red-100 text-red-600' :
+                        'bg-blue-100 text-blue-600'
                       }`}>
                       {order.status}
                     </span>
