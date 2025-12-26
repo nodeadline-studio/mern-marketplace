@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary: #375a53;
+  --color-primary-light: #93c5ae;
+  --color-secondary: #455a64;
+}
+
+body {
+  @apply bg-gray-50 text-gray-900 font-sans;
+}
+
+.card {
+  @apply bg-white rounded-lg shadow-md p-6;
+}
+
+.btn-primary {
+  @apply bg-primary text-white px-4 py-2 rounded transition-colors hover:bg-primary-dark;
+}
+
+.btn-secondary {
+  @apply bg-secondary text-white px-4 py-2 rounded transition-colors hover:bg-secondary-dark;
+}
+
+.input-field {
+  @apply w-full border border-gray-300 rounded px-3 py-2 mt-1 focus:ring-2 focus:ring-primary focus:border-transparent outline-none;
+}

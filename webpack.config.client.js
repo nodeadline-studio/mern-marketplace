@@ -7,12 +7,11 @@ const config = {
     mode: "development",
     devtool: 'eval-source-map',
     entry: [
-        'react-hot-loader/patch',
         'webpack-hot-middleware/client?reload=true',
         path.join(CURRENT_WORKING_DIR, 'client/main.js')
     ],
     output: {
-        path: path.join(CURRENT_WORKING_DIR , '/dist'),
+        path: path.join(CURRENT_WORKING_DIR, '/dist'),
         filename: 'bundle.js',
         publicPath: '/dist/'
     },
@@ -28,12 +27,16 @@ const config = {
             {
                 test: /\.(ttf|eot|svg|gif|jpg|png)(\?[\s\S]+)?$/,
                 use: 'file-loader'
+            },
+            {
+                test: /\.css$/i,
+                use: ['style-loader', 'css-loader', 'postcss-loader'],
             }
         ]
-    },  plugins: [
-          new webpack.HotModuleReplacementPlugin(),
-          new webpack.NoEmitOnErrorsPlugin()
-      ]
+    }, plugins: [
+        new webpack.HotModuleReplacementPlugin(),
+        new webpack.NoEmitOnErrorsPlugin()
+    ]
 }
 
 module.exports = config

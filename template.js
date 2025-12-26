@@ -1,22 +1,23 @@
-export default ({markup, css}) => {
-    return `<!doctype html>
+export default ({ stripePublishableKey } = {}) => {
+  return `<!doctype html>
       <html lang="en">
         <head>
           <meta charset="utf-8">
-          <title>MERN Marketplace</title>
-          <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400">
-          <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-          <style>
-              a{
-                text-decoration: none
-              }
-          </style>
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Service Marketplace</title>
+          <meta name="description" content="Find professional freelance services for your business needs">
+          <link rel="preconnect" href="https://fonts.googleapis.com">
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+          <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
         </head>
-        <body style="margin:0">
-          <div id="root">${markup}</div>
-          <style id="jss-server-side">${css}</style>
+        <body style="margin:0; font-family: 'Inter', sans-serif;">
+          <div id="root"></div>
+          <script>
+            window.STRIPE_PUBLISHABLE_KEY = ${JSON.stringify(stripePublishableKey || '')};
+          </script>
           <script id="stripe-js" src="https://js.stripe.com/v3/" async></script>
           <script type="text/javascript" src="/dist/bundle.js"></script>
         </body>
       </html>`
 }
+

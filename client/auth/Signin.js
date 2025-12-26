@@ -1,44 +1,10 @@
-import React, {useState} from 'react'
-import Card from '@material-ui/core/Card'
-import CardActions from '@material-ui/core/CardActions'
-import CardContent from '@material-ui/core/CardContent'
-import Button from '@material-ui/core/Button'
-import TextField from '@material-ui/core/TextField'
-import Typography from '@material-ui/core/Typography'
-import Icon from '@material-ui/core/Icon'
-import { makeStyles } from '@material-ui/core/styles'
+import { useState } from 'react'
+import { Link, Navigate, useLocation } from 'react-router-dom'
 import auth from './../auth/auth-helper'
-import {Redirect} from 'react-router-dom'
-import {signin} from './api-auth.js'
+import { signin } from './api-auth.js'
 
-const useStyles = makeStyles(theme => ({
-  card: {
-    maxWidth: 600,
-    margin: 'auto',
-    textAlign: 'center',
-    marginTop: theme.spacing(5),
-    paddingBottom: theme.spacing(2)
-  },
-  error: {
-    verticalAlign: 'middle'
-  },
-  title: {
-    marginTop: theme.spacing(2),
-    color: theme.palette.openTitle
-  },
-  textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    width: 300
-  },
-  submit: {
-    margin: 'auto',
-    marginBottom: theme.spacing(2)
-  }
-}))
-
-export default function Signin(props) {
-  const classes = useStyles()
+export default function Signin() {
+  const location = useLocation()
   const [values, setValues] = useState({
     email: '',
     password: '',
@@ -53,11 +19,11 @@ export default function Signin(props) {
     }
 
     signin(user).then((data) => {
-      if (data.error) {
-        setValues({ ...values, error: data.error})
+      if (data && data.error) {
+        setValues({ ...values, error: data.error })
       } else {
         auth.authenticate(data, () => {
-          setValues({ ...values, error: '',redirectToReferrer: true})
+          setValues({ ...values, error: '', redirectToReferrer: true })
         })
       }
     })
@@ -67,36 +33,67 @@ export default function Signin(props) {
     setValues({ ...values, [name]: event.target.value })
   }
 
-  const {from} = props.location.state || {
-    from: {
-      pathname: '/'
-    }
-  }
-  const {redirectToReferrer} = values
-  if (redirectToReferrer) {
-      return (<Redirect to={from}/>)
+  const from = location.state?.from || { pathname: '/' }
+
+  if (values.redirectToReferrer) {
+    return <Navigate to={from} replace />
   }
 
   return (
-      <Card className={classes.card}>
-        <CardContent>
-          <Typography variant="h5" className={classes.title}>
+    <div className="max-w-md mx-auto px-4 py-20">
+      <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 md:p-10">
+        <div className="text-center mb-10">
+          <h2 className="text-3xl font-extrabold text-gray-900 mb-2">Welcome Back</h2>
+          <p className="text-gray-500 font-medium">Log in to manage your services</p>
+        </div>
+
+        <div className="space-y-6">
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-2">Email Address</label>
+            <input
+              type="email"
+              className="input-field"
+              placeholder="john@example.com"
+              value={values.email}
+              onChange={handleChange('email')}
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-2">Password</label>
+            <input
+              type="password"
+              className="input-field"
+              placeholder="••••••••"
+              value={values.password}
+              onChange={handleChange('password')}
+            />
+          </div>
+
+          {values.error && (
+            <div className="bg-red-50 text-red-600 p-4 rounded-xl border border-red-100 text-sm font-medium animate-shake">
+              ⚠️ {values.error}
+            </div>
+          )}
+
+          <button
+            onClick={clickSubmit}
+            className="w-full bg-primary text-white py-4 rounded-2xl font-bold text-lg hover:bg-primary-dark transition-all shadow-xl shadow-primary/20 active:scale-[0.98]"
+          >
             Sign In
-          </Typography>
-          <TextField id="email" type="email" label="Email" className={classes.textField} value={values.email} onChange={handleChange('email')} margin="normal"/><br/>
-          <TextField id="password" type="password" label="Password" className={classes.textField} value={values.password} onChange={handleChange('password')} margin="normal"/>
-          <br/> {
-            values.error && (<Typography component="p" color="error">
-              <Icon color="error" className={classes.error}>error</Icon>
-              {values.error}
-            </Typography>)
-          }
-        </CardContent>
-        <CardActions>
-        <Button color="primary" variant="contained" onClick={clickSubmit} className={classes.submit}>Submit</Button>
-        </CardActions>
-      </Card>
-    )
+          </button>
+
+          <div className="text-center pt-4">
+            <p className="text-gray-500 font-medium">
+              Don't have an account?{' '}
+              <Link to="/signup" className="text-primary font-bold hover:underline">
+                Sign Up
+              </Link>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 }
 
 

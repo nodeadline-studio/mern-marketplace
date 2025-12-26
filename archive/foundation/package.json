@@ -1,0 +1,36 @@
+{
+  "name": "service-marketplace",
+  "version": "1.0.0",
+  "description": "A modern service marketplace template built with React and Node.js",
+  "private": true,
+  "scripts": {
+    "start": "concurrently \"cd client && npm start\" \"cd server && npm run dev\"",
+    "dev": "concurrently \"cd client && npm start\" \"cd server && npm run dev\"",
+    "build": "cd client && npm run build",
+    "test": "cd client && npm test && cd server && npm test",
+    "lint": "cd client && npm run lint && cd server && npm run lint",
+    "format": "cd client && npm run format && cd server && npm run format",
+    "install": "cd client && npm install && cd server && npm install"
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "devDependencies": {
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{css,scss,md,json}": [
+      "prettier --write"
+    ]
+  }
+}

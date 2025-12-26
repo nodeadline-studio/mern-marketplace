@@ -1,48 +1,8 @@
-import React, {useState} from 'react'
-import Card from '@material-ui/core/Card'
-import CardActions from '@material-ui/core/CardActions'
-import CardContent from '@material-ui/core/CardContent'
-import Button from '@material-ui/core/Button'
-import TextField from '@material-ui/core/TextField'
-import Typography from '@material-ui/core/Typography'
-import Icon from '@material-ui/core/Icon'
-import { makeStyles } from '@material-ui/core/styles'
-import {create} from './api-user.js'
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogContentText from '@material-ui/core/DialogContentText'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import {Link} from 'react-router-dom'
-
-const useStyles = makeStyles(theme => ({
-  card: {
-    maxWidth: 600,
-    margin: 'auto',
-    textAlign: 'center',
-    marginTop: theme.spacing(5),
-    paddingBottom: theme.spacing(2)
-  },
-  error: {
-    verticalAlign: 'middle'
-  },
-  title: {
-    marginTop: theme.spacing(2),
-    color: theme.palette.openTitle
-  },
-  textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    width: 300
-  },
-  submit: {
-    margin: 'auto',
-    marginBottom: theme.spacing(2)
-  }
-}))
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import { create } from './api-user.js'
 
 export default function Signup() {
-  const classes = useStyles()
   const [values, setValues] = useState({
     name: '',
     password: '',
@@ -63,46 +23,93 @@ export default function Signup() {
     }
     create(user).then((data) => {
       if (data.error) {
-        setValues({ ...values, error: data.error})
+        setValues({ ...values, error: data.error })
       } else {
-        setValues({ ...values, error: '', open: true})
+        setValues({ ...values, error: '', open: true })
       }
     })
-  }   
-    return (<div>
-      <Card className={classes.card}>
-        <CardContent>
-          <Typography variant="h6" className={classes.title}>
-            Sign Up
-          </Typography>
-          <TextField id="name" label="Name" className={classes.textField} value={values.name} onChange={handleChange('name')} margin="normal"/><br/>
-          <TextField id="email" type="email" label="Email" className={classes.textField} value={values.email} onChange={handleChange('email')} margin="normal"/><br/>
-          <TextField id="password" type="password" label="Password" className={classes.textField} value={values.password} onChange={handleChange('password')} margin="normal"/>
-          <br/> {
-            values.error && (<Typography component="p" color="error">
-              <Icon color="error" className={classes.error}>error</Icon>
-              {values.error}</Typography>)
-          }
-        </CardContent>
-        <CardActions>
-          <Button color="primary" variant="contained" onClick={clickSubmit} className={classes.submit}>Submit</Button>
-        </CardActions>
-      </Card>
-      <Dialog open={values.open} disableBackdropClick={true}>
-        <DialogTitle>New Account</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            New account successfully created.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Link to="/signin">
-            <Button color="primary" autoFocus="autoFocus" variant="contained">
-              Sign In
-            </Button>
-          </Link>
-        </DialogActions>
-      </Dialog>
+  }
+
+  if (values.open) {
+    return (
+      <div className="max-w-md mx-auto mt-20 p-8 bg-white rounded-3xl shadow-2xl border border-gray-100 text-center animate-in zoom-in duration-300">
+        <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center text-green-500 text-4xl mx-auto mb-6">
+          ✓
+        </div>
+        <h2 className="text-3xl font-extrabold text-gray-900 mb-2">Welcome Aboard!</h2>
+        <p className="text-gray-500 mb-8">Your account has been created successfully. You're ready to start exploring the marketplace.</p>
+        <Link
+          to="/signin"
+          className="block w-full bg-primary text-white py-4 rounded-2xl font-bold text-lg hover:bg-primary-dark transition-all shadow-xl shadow-primary/20 active:scale-95"
+        >
+          Sign In Now
+        </Link>
+      </div>
+    )
+  }
+
+  return (
+    <div className="max-w-md mx-auto px-4 py-20">
+      <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 md:p-10">
+        <div className="text-center mb-10">
+          <h2 className="text-3xl font-extrabold text-gray-900 mb-2">Create Account</h2>
+          <p className="text-gray-500 font-medium">Join our community of professionals</p>
+        </div>
+
+        <div className="space-y-6">
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-2">Full Name</label>
+            <input
+              className="input-field"
+              placeholder="John Doe"
+              value={values.name}
+              onChange={handleChange('name')}
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-2">Email Address</label>
+            <input
+              type="email"
+              className="input-field"
+              placeholder="john@example.com"
+              value={values.email}
+              onChange={handleChange('email')}
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-2">Password</label>
+            <input
+              type="password"
+              className="input-field"
+              placeholder="••••••••"
+              value={values.password}
+              onChange={handleChange('password')}
+            />
+          </div>
+
+          {values.error && (
+            <div className="bg-red-50 text-red-600 p-4 rounded-xl border border-red-100 text-sm font-medium">
+              ⚠️ {values.error}
+            </div>
+          )}
+
+          <button
+            onClick={clickSubmit}
+            className="w-full bg-primary text-white py-4 rounded-2xl font-bold text-lg hover:bg-primary-dark transition-all shadow-xl shadow-primary/20 active:scale-[0.98]"
+          >
+            Create Account
+          </button>
+
+          <div className="text-center pt-4">
+            <p className="text-gray-500 font-medium">
+              Already have an account?{' '}
+              <Link to="/signin" className="text-primary font-bold hover:underline">
+                Sign In
+              </Link>
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

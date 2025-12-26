@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles */
+:root {
+  --primary-color: #4F46E5;
+  --secondary-color: #10B981;
+  --accent-color: #F59E0B;
+  --text-color: #1F2937;
+  --light-text: #6B7280;
+  --background: #FFFFFF;
+  --card-bg: #F9FAFB;
+  --border-color: #E5E7EB;
+}
+
+.dark-theme {
+  --primary-color: #6366F1;
+  --secondary-color: #10B981;
+  --accent-color: #F59E0B;
+  --text-color: #F9FAFB;
+  --light-text: #D1D5DB;
+  --background: #111827;
+  --card-bg: #1F2937;
+  --border-color: #374151;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--background);
+  color: var(--text-color);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--card-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary-color);
+}

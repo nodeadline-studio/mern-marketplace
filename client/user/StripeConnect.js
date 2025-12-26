@@ -1,82 +1,90 @@
-import React, {useState, useEffect} from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-import Paper from '@material-ui/core/Paper'
-import Typography from '@material-ui/core/Typography'
-import queryString from 'query-string'
-import {stripeUpdate} from './api-user.js'
+import { useEffect, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import auth from './../auth/auth-helper'
+import { stripeUpdate } from './api-user.js'
 
-const useStyles = makeStyles(theme => ({
-  root: theme.mixins.gutters({
-    maxWidth: 600,
-    margin: 'auto',
-    padding: theme.spacing(3),
-    marginTop: theme.spacing(5)
-  }),
-  title: {
-    margin: `${theme.spacing(3)}px 0 ${theme.spacing(2)}px ${theme.spacing(2)}px`,
-    color: theme.palette.protectedTitle,
-    fontSize: '1.1em'
-  },
-  subheading: {
-    color: theme.palette.openTitle,
-    marginLeft: "24px"
-  }
-}))
-
-export default function StripeConnect(props){
-  const classes = useStyles()
+export default function StripeConnect() {
+  const navigate = useNavigate()
+  const location = useLocation()
   const [values, setValues] = useState({
     error: false,
     connecting: false,
     connected: false
   })
   const jwt = auth.isAuthenticated()
+
   useEffect(() => {
     const abortController = new AbortController()
     const signal = abortController.signal
 
-    const parsed = queryString.parse(props.location.search)
-    if(parsed.error){
-      setValues({...values, error: true})
+    const params = new URLSearchParams(location.search)
+    const error = params.get('error')
+    const code = params.get('code')
+
+    if (error) {
+      setValues({ ...values, error: true })
     }
-    if(parsed.code){
-      setValues({...values, connecting: true, error: false})
-      //post call to stripe, get credentials and update user data
+    if (code) {
+      setValues({ ...values, connecting: true, error: false })
       stripeUpdate({
         userId: jwt.user._id
       }, {
         t: jwt.token
-      }, parsed.code, signal).then((data) => {
-        if (data.error) {
-          setValues({...values, error: true, connected: false, connecting: false})
+      }, code, signal).then((data) => {
+        if (data && data.error) {
+          setValues({ ...values, error: true, connected: false, connecting: false })
         } else {
-          setValues({...values, connected: true, connecting: false, error: false})
+          setValues({ ...values, connected: true, connecting: false, error: false })
         }
       })
     }
-    return function cleanup(){
+    return function cleanup() {
       abortController.abort()
     }
+  }, [location.search, jwt.user._id, jwt.token])
 
-  }, [])
+  return (
+    <div className="max-w-xl mx-auto px-4 py-12">
+      <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden text-center p-12">
+        <div className="w-20 h-20 bg-primary/10 text-primary rounded-full flex items-center justify-center text-3xl mx-auto mb-8">
+          💳
+        </div>
 
-    return (
-      <div>
-        <Paper className={classes.root} elevation={4}>
-          <Typography type="title" className={classes.title}>
-            Connect your Stripe Account
-          </Typography>
-          {values.error && (<Typography type="subheading" className={classes.subheading}>
-              Could not connect your Stripe account. Try again later.
-            </Typography>)}
-          {values.connecting && (<Typography type="subheading" className={classes.subheading}>
-              Connecting your Stripe account ...
-            </Typography>)}
-          {values.connected && (<Typography type="subheading" className={classes.subheading}>
-              Your Stripe account successfully connected!
-            </Typography>)}
-        </Paper>
+        <h1 className="text-3xl font-extrabold text-gray-900 mb-4">Connect with Stripe</h1>
+
+        <div className="space-y-6">
+          {values.error && (
+            <div className="bg-red-50 text-red-600 p-6 rounded-2xl border border-red-100 font-medium">
+              <p className="text-lg mb-1">Could not connect account</p>
+              <p className="text-sm opacity-80">Something went wrong during the Stripe authentication process. Please try again later.</p>
+            </div>
+          )}
+
+          {values.connecting && (
+            <div className="flex flex-col items-center gap-4">
+              <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+              <p className="text-gray-500 font-medium italic">Establishing secure connection to Stripe...</p>
+            </div>
+          )}
+
+          {values.connected && (
+            <div className="bg-green-50 text-green-600 p-6 rounded-2xl border border-green-100 font-medium animate-in zoom-in-95">
+              <p className="text-lg mb-1">Successfully Connected!</p>
+              <p className="text-sm opacity-80 text-gray-500">Your account is now ready to receive payments for your services.</p>
+              <button
+                onClick={() => navigate(`/user/${jwt.user._id}`)}
+                className="mt-6 bg-green-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-green-700 transition-all shadow-lg shadow-green-200"
+              >
+                Return to Profile
+              </button>
+            </div>
+          )}
+
+          {!values.connecting && !values.connected && !values.error && (
+            <p className="text-gray-500">Waiting for Stripe response...</p>
+          )}
+        </div>
       </div>
-    )
+    </div>
+  )
 }

@@ -1,32 +1,8 @@
-import React, {useState, useEffect} from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-import Paper from '@material-ui/core/Paper'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemAvatar from '@material-ui/core/ListItemAvatar'
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
-import ListItemText from '@material-ui/core/ListItemText'
-import Avatar from '@material-ui/core/Avatar'
-import IconButton from '@material-ui/core/IconButton'
-import Typography from '@material-ui/core/Typography'
-import ArrowForward from '@material-ui/icons/ArrowForward'
-import Person from '@material-ui/icons/Person'
-import {Link} from 'react-router-dom'
-import {list} from './api-user.js'
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { list } from './api-user.js'
 
-const useStyles = makeStyles(theme => ({
-  root: theme.mixins.gutters({
-    padding: theme.spacing(1),
-    margin: theme.spacing(5)
-  }),
-  title: {
-    margin: `${theme.spacing(4)}px 0 ${theme.spacing(2)}px`,
-    color: theme.palette.openTitle
-  }
-}))
-
-export default function Users() { 
-  const classes = useStyles()
+export default function Users() {
   const [users, setUsers] = useState([])
 
   useEffect(() => {
@@ -35,42 +11,55 @@ export default function Users() {
 
     list(signal).then((data) => {
       if (data && data.error) {
-        console.log(data.error)
+        console.debug(data.error)
       } else {
         setUsers(data)
       }
     })
 
-    return function cleanup(){
+    return function cleanup() {
       abortController.abort()
     }
   }, [])
 
   return (
-    <Paper className={classes.root} elevation={4}>
-      <Typography variant="h6" className={classes.title}>
-        All Users
-      </Typography>
-      <List dense>
-       {users.map((item, i) => {
-        return <Link to={"/user/" + item._id} key={i}>
-                  <ListItem button>
-                    <ListItemAvatar>
-                      <Avatar>
-                        <Person/>
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText primary={item.name}/>
-                    <ListItemSecondaryAction>
-                    <IconButton>
-                        <ArrowForward/>
-                    </IconButton>
-                    </ListItemSecondaryAction>
-                  </ListItem>
-               </Link>
-             })
-           }
-      </List>
-    </Paper>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="mb-10 text-center">
+        <h1 className="text-4xl font-extrabold text-gray-900 mb-4">Discover Top Freelancers</h1>
+        <p className="text-gray-500 text-lg">Connect with professionals who can help you bring your ideas to life.</p>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+        {users.map((user, i) => (
+          <Link
+            key={i}
+            to={"/user/" + user._id}
+            className="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 p-6 flex flex-col items-center text-center"
+          >
+            <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center text-primary text-4xl font-bold mb-4 group-hover:scale-110 transition-transform">
+              {user.name.charAt(0)}
+            </div>
+
+            <h3 className="text-xl font-bold text-gray-900 group-hover:text-primary transition-colors">
+              {user.name}
+            </h3>
+
+            <p className="text-gray-500 text-sm mt-1 line-clamp-1">
+              {user.seller ? 'Professional Seller' : 'Platform Member'}
+            </p>
+
+            <div className="mt-6 flex items-center gap-2 text-primary font-bold text-sm">
+              View Profile <span>→</span>
+            </div>
+          </Link>
+        ))}
+      </div>
+
+      {users.length === 0 && (
+        <div className="text-center py-20 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200">
+          <p className="text-gray-400 text-lg">No freelancers found yet.</p>
+        </div>
+      )}
+    </div>
   )
 }

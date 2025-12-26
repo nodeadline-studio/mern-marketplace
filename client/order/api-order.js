@@ -1,24 +1,26 @@
-const create = async (params, credentials, order, token) => {
+const create = async (params, credentials, orderData) => {
   try {
-    let response = await fetch('/api/orders/'+params.userId, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + credentials.t
-        },
-        body: JSON.stringify({order: order, token:token})
-      })
-      return response.json()
-    }catch(err) {
-      console.log(err)
-    }
+    let response = await fetch('/api/orders/' + params.userId, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + credentials.t
+      },
+      body: JSON.stringify(orderData)
+    })
+    return response.json()
+  } catch (err) {
+    console.debug(err)
+  }
 }
 
-const listByShop = async (params, credentials, signal) => {
+const listByBuyer = async (params, credentials, signal) => {
   try {
-    let response = await fetch('/api/orders/shop/'+params.shopId, {
+    let response = await fetch('/api/orders/user/' + params.userId, {
       method: 'GET',
+      credentials: 'include',
       signal: signal,
       headers: {
         'Accept': 'application/json',
@@ -26,78 +28,16 @@ const listByShop = async (params, credentials, signal) => {
       }
     })
     return response.json()
-  }catch(err){
-    console.log(err)
+  } catch (err) {
+    console.debug(err)
   }
 }
 
-const update = async (params, credentials, product) => {
+const listBySeller = async (params, credentials, signal) => {
   try {
-    let response = await fetch('/api/order/status/' + params.shopId, {
-      method: 'PUT',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + credentials.t
-      },
-      body: JSON.stringify(product)
-    })
-    return response.json()
-  } catch(err){
-    console.log(err)
-  }
-}
-
-const cancelProduct = async (params, credentials, product) => {
-  try {
-    let response = await fetch('/api/order/'+params.shopId+'/cancel/'+params.productId, {
-      method: 'PUT',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + credentials.t
-      },
-      body: JSON.stringify(product)
-    })
-    return response.json()
-  }catch(err){
-    console.log(err)
-  }
-}
-
-const processCharge = async (params, credentials, product) => {
-  try {
-    let response = await fetch('/api/order/'+params.orderId+'/charge/'+params.userId+'/'+params.shopId, {
-      method: 'PUT',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + credentials.t
-      },
-      body: JSON.stringify(product)
-    })
-    return response.json()
-  } catch(err) {
-    console.log(err)
-  }
-}
-
-const getStatusValues = async (signal) => {
-  try {
-    let response = await fetch('/api/order/status_values', {
+    let response = await fetch('/api/orders/seller/' + params.userId, {
       method: 'GET',
-      signal: signal
-    })
-    return response.json()
-  }catch(err) { 
-    console.log(err)
-  }
-}
-
-const listByUser = async (params, credentials, signal) => {
-  try {
-    let response = await fetch('/api/orders/user/'+params.userId, {
-      method: 'GET',
+      credentials: 'include',
       signal: signal,
       headers: {
         'Accept': 'application/json',
@@ -105,8 +45,26 @@ const listByUser = async (params, credentials, signal) => {
       }
     })
     return response.json()
-  }catch(err) {
-    console.log(err)
+  } catch (err) {
+    console.debug(err)
+  }
+}
+
+const updateStatus = async (params, credentials, statusData) => {
+  try {
+    let response = await fetch('/api/order/' + params.orderId + '/status', {
+      method: 'PUT',
+      credentials: 'include',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + credentials.t
+      },
+      body: JSON.stringify(statusData)
+    })
+    return response.json()
+  } catch (err) {
+    console.debug(err)
   }
 }
 
@@ -114,21 +72,22 @@ const read = async (params, credentials, signal) => {
   try {
     let response = await fetch('/api/order/' + params.orderId, {
       method: 'GET',
-      signal: signal
+      credentials: 'include',
+      signal: signal,
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': credentials?.t ? ('Bearer ' + credentials.t) : undefined
+      }
     })
     return response.json()
-  } catch(err) {
-    console.log(err)
+  } catch (err) {
+    console.debug(err)
   }
 }
 
 export {
   create,
-  listByShop,
-  update,
-  cancelProduct,
-  processCharge,
-  getStatusValues,
-  listByUser,
-  read
+  listByBuyer,
+  listBySeller, read, updateStatus
 }
+

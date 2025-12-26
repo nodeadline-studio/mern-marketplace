@@ -1,39 +1,31 @@
 import express from 'express'
 import orderCtrl from '../controllers/order.controller'
-import productCtrl from '../controllers/product.controller'
 import authCtrl from '../controllers/auth.controller'
-import shopCtrl from '../controllers/shop.controller'
 import userCtrl from '../controllers/user.controller'
 
 const router = express.Router()
 
+// Create service order
 router.route('/api/orders/:userId')
-  .post(authCtrl.requireSignin, userCtrl.stripeCustomer, productCtrl.decreaseQuantity, orderCtrl.create)
+  .post(authCtrl.requireSignin, orderCtrl.create)
 
-router.route('/api/orders/shop/:shopId')
-  .get(authCtrl.requireSignin, shopCtrl.isOwner, orderCtrl.listByShop)
-
+// Get orders by buyer
 router.route('/api/orders/user/:userId')
-  .get(authCtrl.requireSignin, orderCtrl.listByUser)
+  .get(authCtrl.requireSignin, orderCtrl.listByBuyer)
 
-router.route('/api/order/status_values')
-  .get(orderCtrl.getStatusValues)
+// Get orders by seller
+router.route('/api/orders/seller/:userId')
+  .get(authCtrl.requireSignin, orderCtrl.listBySeller)
 
-router.route('/api/order/:shopId/cancel/:productId')
-  .put(authCtrl.requireSignin, shopCtrl.isOwner, productCtrl.increaseQuantity, orderCtrl.update)
+// Update order status
+router.route('/api/order/:orderId/status')
+  .put(authCtrl.requireSignin, orderCtrl.orderByID, orderCtrl.updateStatus)
 
-router.route('/api/order/:orderId/charge/:userId/:shopId')
-  .put(authCtrl.requireSignin, shopCtrl.isOwner, userCtrl.createCharge, orderCtrl.update)
-
-router.route('/api/order/status/:shopId')
-  .put(authCtrl.requireSignin, shopCtrl.isOwner, orderCtrl.update)
-
+// Get order by ID
 router.route('/api/order/:orderId')
-  .get(orderCtrl.read)
+  .get(orderCtrl.orderByID, orderCtrl.read)
 
 router.param('userId', userCtrl.userByID)
-router.param('shopId', shopCtrl.shopByID)
-router.param('productId', productCtrl.productByID)
 router.param('orderId', orderCtrl.orderByID)
 
 export default router

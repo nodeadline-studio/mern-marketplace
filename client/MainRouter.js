@@ -1,64 +1,75 @@
-import React from 'react'
-import {Route, Switch} from 'react-router-dom'
-import Home from './core/Home'
-import Users from './user/Users'
-import Signup from './user/Signup'
+import { Route, Routes } from 'react-router-dom'
+import PrivateRoute from './auth/PrivateRoute'
 import Signin from './auth/Signin'
+import CheckoutFailure from './checkout/CheckoutFailure'
+import CheckoutSuccess from './checkout/CheckoutSuccess'
+import Home from './core/Home'
+import Menu from './core/Menu'
+import MyOrders from './order/MyOrders'
+import Order from './order/Order'
+import SellerDashboard from './seller/SellerDashboard'
+import EditService from './service/EditService'
+import NewService from './service/NewService'
+import Service from './service/Service'
 import EditProfile from './user/EditProfile'
 import Profile from './user/Profile'
-import PrivateRoute from './auth/PrivateRoute'
-import Menu from './core/Menu'
-import NewShop from './shop/NewShop'
-import Shops from './shop/Shops'
-import MyShops from './shop/MyShops'
-import Shop from './shop/Shop'
-import EditShop from './shop/EditShop'
-import NewProduct from './product/NewProduct'
-import EditProduct from './product/EditProduct'
-import Product from './product/Product'
-import Cart from './cart/Cart'
-import StripeConnect from './user/StripeConnect'
-import ShopOrders from './order/ShopOrders'
-import Order from './order/Order'
-import MyAuctions from './auction/MyAuctions'
-import OpenAuctions from './auction/OpenAuctions'
-import NewAuction from './auction/NewAuction'
-import EditAuction from './auction/EditAuction'
-import Auction from './auction/Auction'
+import Signup from './user/Signup'
+import Users from './user/Users'
 
 const MainRouter = () => {
-  return (<div>
-      <Menu/>
-      <Switch>
-        <Route exact path="/" component={Home}/>
-        <Route path="/users" component={Users}/>
-        <Route path="/signup" component={Signup}/>
-        <Route path="/signin" component={Signin}/>
-        <PrivateRoute path="/user/edit/:userId" component={EditProfile}/>
-        <Route path="/user/:userId" component={Profile}/>
+  return (
+    <>
+      <Menu />
+      <Routes>
+        <Route index path="/" element={<Home />} />
+        <Route path="/users" element={<Users />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/signin" element={<Signin />} />
 
-        <Route path="/cart" component={Cart}/>
-        <Route path="/product/:productId" component={Product}/>
-        <Route path="/shops/all" component={Shops}/>
-        <Route path="/shops/:shopId" component={Shop}/>
+        {/* Profile Routes */}
+        <Route path="/user/edit/:userId" element={
+          <PrivateRoute>
+            <EditProfile />
+          </PrivateRoute>
+        } />
+        <Route path="/user/:userId" element={<Profile />} />
 
-        <Route path="/order/:orderId" component={Order}/>
-        <PrivateRoute path="/seller/orders/:shop/:shopId" component={ShopOrders}/>
+        {/* Service Routes */}
+        <Route path="/service/:serviceId" element={<Service />} />
 
-        <PrivateRoute path="/seller/shops" component={MyShops}/>
-        <PrivateRoute path="/seller/shop/new" component={NewShop}/>
-        <PrivateRoute path="/seller/shop/edit/:shopId" component={EditShop}/>
-        <PrivateRoute path="/seller/:shopId/products/new" component={NewProduct}/>
-        <PrivateRoute path="/seller/:shopId/:productId/edit" component={EditProduct}/>
+        <Route path="/seller/:userId/services/new" element={
+          <PrivateRoute>
+            <NewService />
+          </PrivateRoute>
+        } />
 
-        <Route path="/seller/stripe/connect" component={StripeConnect}/>
-        <PrivateRoute path="/myauctions" component={MyAuctions}/>
-        <PrivateRoute path="/auction/new" component={NewAuction}/>
-        <PrivateRoute path="/auction/edit/:auctionId" component={EditAuction}/>
-        <Route path="/auction/:auctionId" component={Auction}/>
-        <Route path="/auctions/all" component={OpenAuctions}/>
-      </Switch>
-    </div>)
+        <Route path="/seller/:userId/services/:serviceId/edit" element={
+          <PrivateRoute>
+            <EditService />
+          </PrivateRoute>
+        } />
+
+        {/* Seller Dashboard */}
+        <Route path="/seller/dashboard" element={
+          <PrivateRoute>
+            <SellerDashboard />
+          </PrivateRoute>
+        } />
+
+        {/* Order Routes */}
+        <Route path="/order/:orderId" element={<Order />} />
+        <Route path="/myorders" element={
+          <PrivateRoute>
+            <MyOrders />
+          </PrivateRoute>
+        } />
+
+        {/* Checkout Routes */}
+        <Route path="/checkout/success" element={<CheckoutSuccess />} />
+        <Route path="/checkout/failure" element={<CheckoutFailure />} />
+      </Routes>
+    </>
+  )
 }
 
 export default MainRouter
