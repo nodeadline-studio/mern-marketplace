@@ -27,8 +27,8 @@ describe('checkout.controller', () => {
     process.env = {
       ...process.env,
       NODE_ENV: 'test',
-      JWT_SECRET: process.env.TEST_JWT_SECRET || 'test-only-not-for-production',
-      MONGODB_URI: 'mongodb://localhost:27017/service-marketplace',
+      JWT_SECRET: process.env.TEST_JWT_SECRET || 'test_secret',
+      MONGODB_URI: 'mongodb://localhost/test',
       STRIPE_TEST_SECRET_KEY: 'sk_test_mock'
     }
   })

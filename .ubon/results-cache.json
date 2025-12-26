@@ -313,7 +313,7 @@
       ]
     },
     "tests/checkout.controller.test.js": {
-      "hash": "bde7718b46f62d6262d661767d612dbff40ad8324abccfd1c962a23db0b92065",
+      "hash": "aeb8f7c938976e13d8bd871125511f8c85a4384c26b8f5754e0573d52ca14787",
       "results": [
         {
           "type": "warning",
@@ -325,9 +325,9 @@
             "startLine": 30,
             "startColumn": 1,
             "endLine": 30,
-            "endColumn": 80
+            "endColumn": 63
           },
-          "match": "process.env.TEST_JWT_SECRET || 'test-only-not-for-production'",
+          "match": "process.env.TEST_JWT_SECRET || 'test_secret'",
           "severity": "medium",
           "ruleId": "SEC008",
           "confidence": 0.75,
@@ -338,28 +338,10 @@
               "startLine": 30,
               "startColumn": 1,
               "endLine": 30,
-              "endColumn": 80,
+              "endColumn": 63,
               "replacement": "      JWT_SECRET: process.env.TEST_JWT_SECRET,"
             }
           ]
-        },
-        {
-          "type": "error",
-          "category": "security",
-          "message": "High-entropy string literal (possible secret)",
-          "file": "tests/checkout.controller.test.js",
-          "line": 31,
-          "range": {
-            "startLine": 31,
-            "startColumn": 1,
-            "endLine": 31,
-            "endColumn": 67
-          },
-          "severity": "high",
-          "ruleId": "SEC018",
-          "match": "mongodb://localhost:27017/service-marketplace",
-          "confidence": 0.9,
-          "fix": "Move secrets to environment variables; rotate credentials"
         }
       ]
     },
@@ -2251,7 +2233,7 @@
       ]
     },
     "server/controllers/service.controller.js": {
-      "hash": "a3a606531e16cc3a946c154952b55f124c15ca7109653f4032a7eb94f0bc4943",
+      "hash": "d4a59ef992971476cc91dbc0b63b4a61c33623f456ac4c8d4a98d8edf35b5a03",
       "results": []
     },
     "server/controllers/review.controller.js": {
@@ -3400,7 +3382,7 @@
       ]
     },
     "client/service/Suggestions.js": {
-      "hash": "67e64d05afe42df77003a41eedb7e54f16e2df2d8aaed7753fde2205cf2270c1",
+      "hash": "cf689073c8def9180c0fe2217b1770871ac7d774487706d5f059e3244c4426fa",
       "results": []
     },
     "client/service/ServicesPage.js": {
@@ -3408,11 +3390,11 @@
       "results": []
     },
     "client/service/Services.js": {
-      "hash": "fa401c94ea1d3aee131e75581384f15860c10851b345996b4573b3e57343f0c8",
+      "hash": "b6dbf6c94313603c86a035d34d6f77817f46e76a44973155349e29801c68708c",
       "results": []
     },
     "client/service/Service.js": {
-      "hash": "09483b36ebc053e1d9d5ba15aa3f699dbdc56c97e054d47e084c615bc955e3b4",
+      "hash": "b3f1cb73a764cd78acfed0a71576f550ddf09b8ff9bc1399aad2aec0f9b5dc77",
       "results": []
     },
     "client/service/SearchFilters.js": {
@@ -3420,7 +3402,7 @@
       "results": []
     },
     "client/service/Search.js": {
-      "hash": "fb326fe525ea2e011ebe0fff4e2c6205a3654aa40ccf91ae16f77b1619ebd980",
+      "hash": "6b696003e482befa91dc451f7130706f2ab0be21e8e39dcb4acf70ec66275a43",
       "results": [
         {
           "type": "warning",
@@ -3461,7 +3443,7 @@
       "results": []
     },
     "client/service/MyServices.js": {
-      "hash": "4fb88e7eb67493affc5fd78172ee3b4f3620f88ae057b169d26fcbb26a313485",
+      "hash": "2547a25945b5baf59e48ec7152d2578ad7702699203dfd52668a56ad6246a962",
       "results": [
         {
           "type": "warning",
@@ -3938,7 +3920,7 @@
       ]
     },
     "client/order/Order.js": {
-      "hash": "2e5ce4852655ad8a8882094d42166b6573d86151300e2390b0ce99050c9123b4",
+      "hash": "39653452cc8a3314e4e1829ae7f691242c355c5a9cb9d596ee5be57c587a6264",
       "results": [
         {
           "type": "warning",

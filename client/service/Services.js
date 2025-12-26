@@ -9,12 +9,7 @@ export default function Services(props) {
           {props.services.map((service, i) => (
             <div key={i} className="group relative bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden flex flex-col">
               <Link to={"/service/" + service._id} className="relative aspect-video overflow-hidden">
-                <img
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  src={'/api/service/image/' + service._id}
-                  alt={service.title}
-                  onError={(e) => { e.target.onerror = null; e.target.src = '/api/service/defaultphoto' }}
-                />
+                <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src={'/api/service/image/' + service._id} alt={service.title || 'Service Image'} onError={(e) => { e.target.onerror = null; e.target.src = '/api/service/defaultphoto' }} />
                 <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/80 to-transparent opacity-80" />
                 <div className="absolute bottom-4 left-4 right-4">
                   <div className="flex justify-between items-end">

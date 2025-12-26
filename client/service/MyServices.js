@@ -49,11 +49,7 @@ export default function MyServices() {
               <div key={i} className="p-6 hover:bg-gray-50 transition-colors group">
                 <div className="flex flex-col md:flex-row gap-6">
                   <div className="w-full md:w-32 h-24 rounded-2xl overflow-hidden shadow-sm border border-gray-100">
-                    <img
-                      src={`/api/service/image/${service._id}`}
-                      alt={service.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    />
+                    <img src={`/api/service/image/${service._id}`} alt={service.title || 'Service Image'} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-3 mb-1">

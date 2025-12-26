@@ -75,11 +75,7 @@ export default function Search() {
                 className="block p-4 hover:bg-gray-50 transition-colors group"
               >
                 <div className="flex items-center gap-4">
-                  <img
-                    src={`/api/service/image/${service._id}`}
-                    className="w-12 h-12 rounded-lg object-cover"
-                    alt={service.title || 'Service preview'}
-                  />
+                  <img src={`/api/service/image/${service._id}`} className="w-12 h-12 rounded-lg object-cover" alt={service.title || 'Service preview'} />
                   <div>
                     <h4 className="text-gray-900 font-semibold group-hover:text-primary transition-colors">{service.title}</h4>
                     <p className="text-gray-500 text-xs">$ {service.price} • {service.category}</p>

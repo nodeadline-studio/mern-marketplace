@@ -1,4 +1,4 @@
-import formidable from 'formidable'
+import { IncomingForm } from 'formidable'
 import fs from 'fs'
 import extend from 'lodash/extend'
 import Service from '../models/service.model'
@@ -25,7 +25,7 @@ const validateImage = (file) => {
 }
 
 const create = (req, res, next) => {
-  const form = new formidable.IncomingForm()
+  const form = new IncomingForm()
   form.keepExtensions = true
   form.maxFileSize = MAX_FILE_SIZE
 
@@ -108,7 +108,7 @@ const read = (req, res) => {
 }
 
 const update = (req, res) => {
-  const form = new formidable.IncomingForm()
+  const form = new IncomingForm()
   form.keepExtensions = true
   form.maxFileSize = MAX_FILE_SIZE
 

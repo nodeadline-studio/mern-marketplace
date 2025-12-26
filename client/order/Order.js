@@ -65,11 +65,7 @@ export default function Order() {
                 {order.service && (
                   <>
                     <div className="w-full md:w-48 h-32 rounded-2xl overflow-hidden shadow-md">
-                      <img
-                        src={`/api/service/image/${order.service._id}`}
-                        alt={order.service.title}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                      />
+                      <img src={`/api/service/image/${order.service._id}`} alt={order.service.title || 'Service Image'} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                     </div>
                     <div className="flex-1">
                       <Link to={`/service/${order.service._id}`} className="text-lg font-bold text-gray-900 hover:text-primary transition-colors block mb-1">

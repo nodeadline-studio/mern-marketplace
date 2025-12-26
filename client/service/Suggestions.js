@@ -15,12 +15,7 @@ export default function Suggestions(props) {
           <div key={i} className="p-4 hover:bg-gray-50 transition-colors">
             <div className="flex gap-4">
               <Link to={"/service/" + service._id} className="w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden border border-gray-100">
-                <img
-                  className="w-full h-full object-cover"
-                  src={'/api/service/image/' + service._id}
-                  alt={service.title}
-                  onError={(e) => { e.target.onerror = null; e.target.src = '/api/service/defaultphoto' }}
-                />
+                <img className="w-full h-full object-cover" src={'/api/service/image/' + service._id} alt={service.title || 'Service Image'} onError={(e) => { e.target.onerror = null; e.target.src = '/api/service/defaultphoto' }} />
               </Link>
 
               <div className="flex-grow flex flex-col justify-center">

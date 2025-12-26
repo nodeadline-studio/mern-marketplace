@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { listCategories, listLatest } from './../service/api-service.js'
 import Categories from './../service/Categories'
 import Search from './../service/Search'
@@ -59,7 +60,7 @@ export default function Home() {
           <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-gray-900">Browse Categories</h2>
-              <button className="text-primary font-semibold text-sm hover:underline">View All</button>
+              <Link to="/services" className="text-primary font-semibold text-sm hover:underline">View All</Link>
             </div>
             <Categories categories={categories} />
           </div>

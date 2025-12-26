@@ -81,12 +81,7 @@ export default function Service() {
 
               <div className="flex flex-col md:flex-row gap-8">
                 <div className="md:w-1/2">
-                  <img
-                    src={imageUrl}
-                    alt={service.title}
-                    className="w-full h-64 object-cover rounded-xl shadow-inner border border-gray-100"
-                    onError={(e) => { e.target.onerror = null; e.target.src = '/api/service/defaultphoto' }}
-                  />
+                  <img src={imageUrl} alt={service.title || 'Service Image'} className="w-full h-64 object-cover rounded-xl shadow-inner border border-gray-100" onError={(e) => { e.target.onerror = null; e.target.src = '/api/service/defaultphoto' }} />
                 </div>
 
                 <div className="md:w-1/2 space-y-6">
