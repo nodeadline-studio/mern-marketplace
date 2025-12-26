@@ -1,4 +1,5 @@
 import extend from 'lodash/extend'
+import mongoose from 'mongoose'
 import stripe from 'stripe'
 import User from '../models/user.model'
 import config from './../../config/config'
@@ -24,16 +25,22 @@ const create = async (req, res) => {
  * Load user and append to req.
  */
 const userByID = async (req, res, next, id) => {
+  // Validate ObjectId format to prevent CastError
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({
+      error: "User not found"
+    })
+  }
   try {
     let user = await User.findById(id)
     if (!user)
-      return res.status('400').json({
+      return res.status(404).json({
         error: "User not found"
       })
     req.profile = user
     next()
   } catch (err) {
-    return res.status('400').json({
+    return res.status(400).json({
       error: "Could not retrieve user"
     })
   }
@@ -42,6 +49,8 @@ const userByID = async (req, res, next, id) => {
 const read = (req, res) => {
   req.profile.hashed_password = undefined
   req.profile.salt = undefined
+  req.profile.stripe_seller = undefined
+  req.profile.stripe_customer = undefined
   return res.json(req.profile)
 }
 

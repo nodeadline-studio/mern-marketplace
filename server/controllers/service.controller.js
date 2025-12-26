@@ -34,16 +34,28 @@ const create = (req, res, next) => {
       return res.status(400).json({ error: 'Image could not be uploaded' })
     }
 
+    // Formidable v3 returns fields and files as arrays
+    const firstField = (name) => (Array.isArray(fields[name]) ? fields[name][0] : fields[name])
+    const firstFile = (name) => (Array.isArray(files[name]) ? files[name][0] : files[name])
+
+    const image = firstFile('image')
+
     // Validate image if provided
-    const imageValidation = validateImage(files.image)
+    const imageValidation = validateImage(image)
     if (!imageValidation.valid) {
       return res.status(400).json({ error: imageValidation.error })
     }
 
-    const service = new Service(fields)
+    // Convert fields back to an object for Mongoose
+    const serviceFields = {}
+    Object.keys(fields).forEach(key => {
+      serviceFields[key] = firstField(key)
+    })
+
+    const service = new Service(serviceFields)
     service.seller = req.profile._id
 
-    if (files.image && imageValidation.path) {
+    if (image && imageValidation.path) {
       service.image.data = fs.readFileSync(imageValidation.path)
       service.image.contentType = imageValidation.type
     }
@@ -79,7 +91,15 @@ const photo = (req, res, next) => {
 }
 
 const defaultPhoto = (req, res) => {
-  return res.status(404).json({ error: 'No image available' })
+  res.set('Content-Type', 'image/svg+xml')
+  res.set('Cache-Control', 'public, max-age=31536000')
+  return res.send(`<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+    <rect fill="#f3f4f6" width="400" height="300"/>
+    <rect fill="#e5e7eb" x="150" y="100" width="100" height="80" rx="8"/>
+    <circle fill="#d1d5db" cx="180" cy="130" r="15"/>
+    <polygon fill="#d1d5db" points="160,170 200,140 240,170"/>
+    <text x="200" y="210" text-anchor="middle" fill="#9ca3af" font-family="system-ui, sans-serif" font-size="14">No Image</text>
+  </svg>`)
 }
 
 const read = (req, res) => {
@@ -97,17 +117,29 @@ const update = (req, res) => {
       return res.status(400).json({ error: 'Photo could not be uploaded' })
     }
 
+    // Formidable v3 returns fields and files as arrays
+    const firstField = (name) => (Array.isArray(fields[name]) ? fields[name][0] : fields[name])
+    const firstFile = (name) => (Array.isArray(files[name]) ? files[name][0] : files[name])
+
+    const image = firstFile('image')
+
     // Validate image if provided
-    const imageValidation = validateImage(files.image)
+    const imageValidation = validateImage(image)
     if (!imageValidation.valid) {
       return res.status(400).json({ error: imageValidation.error })
     }
 
+    // Convert fields back to an object for update
+    const serviceFields = {}
+    Object.keys(fields).forEach(key => {
+      serviceFields[key] = firstField(key)
+    })
+
     let service = req.service
-    service = extend(service, fields)
+    service = extend(service, serviceFields)
     service.updated = Date.now()
 
-    if (files.image && imageValidation.path) {
+    if (image && imageValidation.path) {
       service.image.data = fs.readFileSync(imageValidation.path)
       service.image.contentType = imageValidation.type
     }

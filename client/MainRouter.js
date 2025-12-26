@@ -11,6 +11,7 @@ import SellerDashboard from './seller/SellerDashboard'
 import EditService from './service/EditService'
 import NewService from './service/NewService'
 import Service from './service/Service'
+import ServicesPage from './service/ServicesPage'
 import EditProfile from './user/EditProfile'
 import Profile from './user/Profile'
 import Signup from './user/Signup'
@@ -25,6 +26,11 @@ const MainRouter = () => {
         <Route path="/users" element={<Users />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/signin" element={<Signin />} />
+
+        {/* Services Browse Routes */}
+        <Route path="/services" element={<ServicesPage />} />
+        <Route path="/services/category/:category" element={<ServicesPage />} />
+        <Route path="/services/search" element={<ServicesPage />} />
 
         {/* Profile Routes */}
         <Route path="/user/edit/:userId" element={

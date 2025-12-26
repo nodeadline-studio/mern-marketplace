@@ -16,8 +16,13 @@ export const create = (userId, token, service) => {
     .catch(err => console.debug(err))
 }
 
-export const list = (params, signal) => {
-  return fetch(`${API}/services`, {
+export const list = (params = {}, signal) => {
+  const query = Object.keys(params)
+    .filter(k => params[k])
+    .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+    .join('&')
+  const url = query ? `${API}/services?${query}` : `${API}/services`
+  return fetch(url, {
     method: 'GET',
     signal: signal
   })

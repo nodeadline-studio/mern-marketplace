@@ -78,7 +78,7 @@ export default function Search() {
                   <img
                     src={`/api/service/image/${service._id}`}
                     className="w-12 h-12 rounded-lg object-cover"
-                    alt=""
+                    alt={service.title || 'Service preview'}
                   />
                   <div>
                     <h4 className="text-gray-900 font-semibold group-hover:text-primary transition-colors">{service.title}</h4>

@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom'
+import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 export default function Suggestions(props) {
   return (
@@ -19,6 +19,7 @@ export default function Suggestions(props) {
                   className="w-full h-full object-cover"
                   src={'/api/service/image/' + service._id}
                   alt={service.title}
+                  onError={(e) => { e.target.onerror = null; e.target.src = '/api/service/defaultphoto' }}
                 />
               </Link>
 

@@ -85,6 +85,7 @@ export default function Service() {
                     src={imageUrl}
                     alt={service.title}
                     className="w-full h-64 object-cover rounded-xl shadow-inner border border-gray-100"
+                    onError={(e) => { e.target.onerror = null; e.target.src = '/api/service/defaultphoto' }}
                   />
                 </div>
 

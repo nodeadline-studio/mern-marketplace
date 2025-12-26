@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom'
+import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 export default function Services(props) {
   return (
@@ -13,6 +13,7 @@ export default function Services(props) {
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   src={'/api/service/image/' + service._id}
                   alt={service.title}
+                  onError={(e) => { e.target.onerror = null; e.target.src = '/api/service/defaultphoto' }}
                 />
                 <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/80 to-transparent opacity-80" />
                 <div className="absolute bottom-4 left-4 right-4">
