@@ -56,7 +56,7 @@ export default function Profile() {
               <h1 className="text-3xl font-extrabold text-gray-900 flex items-center gap-3">
                 {user.name}
                 {user.sellerProfile?.verified && (
-                  <span className="text-blue-500 text-xl" title="Verified Seller">✅</span>
+                  <span className="text-blue-500 text-xl" title="Verified Seller"><i className="fa-solid fa-circle-check"></i></span>
                 )}
               </h1>
               <p className="text-gray-500 font-medium">{user.email}</p>
@@ -115,7 +115,7 @@ export default function Profile() {
                 <div className="text-center">
                   <p className="text-gray-400 text-xs uppercase tracking-widest font-bold mb-1">Seller Rating</p>
                   <div className="text-3xl font-extrabold text-gray-900">{user.sellerProfile?.rating || "0.0"}</div>
-                  <div className="text-yellow-400 text-lg">★★★★★</div>
+                  <div className="text-yellow-400 text-lg"><i className="fa-solid fa-star"></i><i className="fa-solid fa-star"></i><i className="fa-solid fa-star"></i><i className="fa-solid fa-star"></i><i className="fa-solid fa-star"></i></div>
                 </div>
                 <div className="flex justify-between text-sm py-3 border-y border-gray-200">
                   <span className="text-gray-500">Total Orders</span>

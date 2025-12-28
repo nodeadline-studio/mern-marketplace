@@ -101,9 +101,23 @@ const stripeUpdate = async (params, credentials, auth_code, signal) => {
   }
 }
 
+const getStripeConfig = async (credentials) => {
+  try {
+    let response = await fetch('/api/stripe/config', {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ' + credentials.t
+      }
+    })
+    return await response.json()
+  } catch (err) {
+    console.debug(err)
+  }
+}
+
 export {
-  create,
-  list,
+  create, getStripeConfig, list,
   read, remove,
   stripeUpdate, update
 }

@@ -10,7 +10,8 @@ export default function OrderService({ service }) {
     requirements: '',
     deliveryDeadline: '',
     error: '',
-    redirect: false
+    redirect: false,
+    orderId: ''
   })
   const jwt = auth.isAuthenticated()
 
@@ -19,20 +20,16 @@ export default function OrderService({ service }) {
   }
 
   const handleClickOpen = () => {
-    if (!jwt) {
-      setValues({ ...values, error: 'Please sign in to order this service' })
-      return
-    }
     setOpen(true)
   }
 
   const handleClose = () => {
     setOpen(false)
-    setValues({ ...values, requirements: '', deliveryDeadline: '', error: '' })
+    setValues({ ...values, requirements: '', deliveryDeadline: '', error: '', orderId: '' })
   }
 
   if (values.redirect) {
-    return <Navigate to="/myorders" replace />
+    return <Navigate to="/checkout/success" state={{ orderId: values.orderId }} replace />
   }
 
   return (
@@ -55,7 +52,7 @@ export default function OrderService({ service }) {
                 onClick={handleClose}
                 className="w-10 h-10 rounded-full hover:bg-gray-200 flex items-center justify-center text-gray-400 hover:text-gray-900 transition-colors"
               >
-                ✕
+                <i className="fa-solid fa-xmark"></i>
               </button>
             </div>
 
@@ -96,29 +93,41 @@ export default function OrderService({ service }) {
                 </p>
               </div>
 
-              <StripeCheckout
-                serviceId={service._id}
-                displayAmount={Number(service.price)}
-                requirements={values.requirements}
-                deliveryDeadline={values.deliveryDeadline || undefined}
-                onSuccess={() => {
-                  setValues({ ...values, error: '', redirect: true })
-                }}
-                onError={(err) => {
-                  const message = typeof err?.message === 'string' ? err.message : (typeof err?.error === 'string' ? err.error : null)
-                  if (message) setValues({ ...values, error: message })
-                }}
-              />
-
-              {values.error && (
-                <div className="bg-red-50 text-red-600 p-4 rounded-xl border border-red-100 text-sm font-medium animate-shake">
-                  ⚠️ {values.error}
+              {jwt ? (
+                <StripeCheckout
+                  serviceId={service._id}
+                  displayAmount={Number(service.price)}
+                  requirements={values.requirements}
+                  deliveryDeadline={values.deliveryDeadline || undefined}
+                  onSuccess={(data) => {
+                    setValues({ ...values, error: '', orderId: data.orderId, redirect: true })
+                  }}
+                  onError={(err) => {
+                    const message = typeof err?.message === 'string' ? err.message : (typeof err?.error === 'string' ? err.error : null)
+                    if (message) setValues({ ...values, error: message })
+                  }}
+                />
+              ) : (
+                <div className="bg-primary/5 p-8 rounded-2xl border border-primary/10 text-center space-y-4">
+                  <div className="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center text-2xl mx-auto">
+                    <i className="fa-solid fa-user-lock"></i>
+                  </div>
+                  <div>
+                    <h3 className="text-gray-900 font-bold">Authentication Required</h3>
+                    <p className="text-gray-500 text-sm">Please sign in to your account to place an order and track its progress.</p>
+                  </div>
+                  <Link
+                    to="/signin"
+                    className="inline-block px-8 py-3 bg-primary text-white rounded-xl font-bold hover:bg-primary-dark transition-all shadow-lg shadow-primary/20"
+                  >
+                    Sign In Now
+                  </Link>
                 </div>
               )}
 
-              {!jwt && !values.error && (
-                <div className="bg-yellow-50 text-yellow-800 p-4 rounded-xl border border-yellow-100 text-sm font-medium">
-                  Please <Link to="/signin" className="underline font-bold">sign in</Link> to complete your order.
+              {values.error && (
+                <div className="bg-red-50 text-red-600 p-4 rounded-xl border border-red-100 text-sm font-medium animate-shake">
+                  <i className="fa-solid fa-triangle-exclamation"></i> {values.error}
                 </div>
               )}
             </div>

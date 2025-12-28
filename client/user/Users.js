@@ -49,7 +49,7 @@ export default function Users() {
             </p>
 
             <div className="mt-6 flex items-center gap-2 text-primary font-bold text-sm">
-              View Profile <span>→</span>
+              View Profile <span><i className="fa-solid fa-arrow-right"></i></span>
             </div>
           </Link>
         ))}

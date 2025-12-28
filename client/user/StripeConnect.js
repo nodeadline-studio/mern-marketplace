@@ -47,7 +47,7 @@ export default function StripeConnect() {
     <div className="max-w-xl mx-auto px-4 py-12">
       <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden text-center p-12">
         <div className="w-20 h-20 bg-primary/10 text-primary rounded-full flex items-center justify-center text-3xl mx-auto mb-8">
-          💳
+          <i className="fa-solid fa-credit-card"></i>
         </div>
 
         <h1 className="text-3xl font-extrabold text-gray-900 mb-4">Connect with Stripe</h1>

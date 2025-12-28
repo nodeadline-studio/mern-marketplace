@@ -38,7 +38,7 @@ export default function DeleteUser(props) {
         onClick={clickButton}
         className="flex items-center gap-2 text-red-500 hover:text-red-700 font-bold transition-colors text-sm"
       >
-        <span className="text-lg">🗑️</span> Delete Account
+        <span className="text-lg"><i className="fa-solid fa-trash"></i></span> Delete Account
       </button>
 
       {open && (

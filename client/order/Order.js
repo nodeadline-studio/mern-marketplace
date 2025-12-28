@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { read } from './api-order.js'
+import auth from '../auth/auth-helper.js'
+import { read, updateStatus } from './api-order.js'
 
 export default function Order() {
   const { orderId } = useParams()
@@ -13,14 +14,23 @@ export default function Order() {
     created: new Date()
   })
 
+  const [error, setError] = useState('')
+  const jwt = auth.isAuthenticated()
+
   useEffect(() => {
     const abortController = new AbortController()
     const signal = abortController.signal
+
+    if (!jwt) {
+      setError("Please sign in to view order details")
+      return
+    }
+
     read({
       orderId: orderId
-    }, signal).then((data) => {
+    }, { t: jwt.token }, signal).then((data) => {
       if (data && data.error) {
-        console.debug(data.error)
+        setError(data.error)
       } else {
         setOrder(data)
       }
@@ -29,6 +39,18 @@ export default function Order() {
       abortController.abort()
     }
   }, [orderId])
+
+  const handleUpdateStatus = (newStatus) => {
+    updateStatus({
+      orderId: order._id
+    }, { t: jwt.token }, { status: newStatus }).then((data) => {
+      if (data && data.error) {
+        setError(data.error)
+      } else {
+        setOrder(data)
+      }
+    })
+  }
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-12">
@@ -93,6 +115,60 @@ export default function Order() {
                   "{order.requirements || 'No specific requirements provided.'}"
                 </p>
               </div>
+            </div>
+
+            {/* Order Actions */}
+            <div className="pt-6 border-t border-gray-100">
+              <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                <span className="w-8 h-8 bg-primary/10 text-primary rounded-lg flex items-center justify-center text-sm">3</span>
+                Order Actions
+              </h2>
+
+              {order.status === 'in_progress' && jwt.user._id === order.seller._id && (
+                <div className="bg-primary/5 p-8 rounded-3xl border border-primary/10 flex flex-col md:flex-row items-center justify-between gap-6">
+                  <div>
+                    <h3 className="text-lg font-bold text-gray-900">Deliver the Work</h3>
+                    <p className="text-sm text-gray-500">Ready to complete the project? Mark it as delivered to notify the buyer.</p>
+                  </div>
+                  <button
+                    onClick={() => handleUpdateStatus('delivered')}
+                    className="px-8 py-4 bg-primary text-white rounded-2xl font-bold hover:bg-primary-dark transition-all shadow-lg shadow-primary/20 flex items-center gap-2"
+                  >
+                    <i className="fa-solid fa-paper-plane"></i> Submit Delivery
+                  </button>
+                </div>
+              )}
+
+              {order.status === 'delivered' && jwt.user._id === order.buyer._id && (
+                <div className="bg-green-50 p-8 rounded-3xl border border-green-100 flex flex-col md:flex-row items-center justify-between gap-6">
+                  <div>
+                    <h3 className="text-lg font-bold text-gray-900">Approve Delivery</h3>
+                    <p className="text-sm text-gray-500">The seller has submitted the work. Please review and mark as complete.</p>
+                  </div>
+                  <button
+                    onClick={() => handleUpdateStatus('completed')}
+                    className="px-8 py-4 bg-green-600 text-white rounded-2xl font-bold hover:bg-green-700 transition-all shadow-lg shadow-green-600/20 flex items-center gap-2"
+                  >
+                    <i className="fa-solid fa-circle-check"></i> Accept & Complete
+                  </button>
+                </div>
+              )}
+
+              {order.status === 'completed' && (
+                <div className="bg-gray-100 p-8 rounded-3xl border border-gray-200 text-center">
+                  <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 text-green-500 text-2xl shadow-sm">
+                    <i className="fa-solid fa-check-double"></i>
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900">This order is completed</h3>
+                  <p className="text-sm text-gray-500">Thank you for using ServiceMarket! We hope to see you again soon.</p>
+                </div>
+              )}
+
+              {error && (
+                <div className="mt-4 p-4 bg-red-50 text-red-600 rounded-xl border border-red-100 text-sm font-medium">
+                  {error}
+                </div>
+              )}
             </div>
           </div>
 

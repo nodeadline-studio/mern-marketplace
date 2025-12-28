@@ -15,7 +15,7 @@ export default function Services(props) {
                   <div className="flex justify-between items-end">
                     <span className="text-white font-bold text-xl drop-shadow-md">$ {service.price}</span>
                     <span className="text-gray-300 text-xs flex items-center gap-1">
-                      🕒 {service.deliveryTime}d
+                      <i className="fa-regular fa-clock"></i> {service.deliveryTime}d
                     </span>
                   </div>
                 </div>
@@ -34,13 +34,13 @@ export default function Services(props) {
 
                 <div className="mt-4 pt-3 border-t border-gray-50 flex items-center justify-between">
                   <Link to={`/user/${service.seller._id}`} className="text-gray-600 text-xs hover:text-primary transition-colors flex items-center gap-1">
-                    👤 {service.seller.name}
+                    <i className="fa-solid fa-user"></i> {service.seller.name}
                   </Link>
                   <Link
                     to={"/service/" + service._id}
                     className="text-primary text-xs font-bold uppercase tracking-widest hover:translate-x-1 transition-transform"
                   >
-                    View Details →
+                    View Details <i className="fa-solid fa-arrow-right"></i>
                   </Link>
                 </div>
               </div>
@@ -49,7 +49,7 @@ export default function Services(props) {
         </div>
       ) : props.searched && (
         <div className="text-center py-20">
-          <span className="text-5xl block mb-4">🔍</span>
+          <span className="text-5xl block mb-4"><i className="fa-solid fa-magnifying-glass"></i></span>
           <h4 className="text-2xl font-bold text-gray-400">No services found!</h4>
           <p className="text-gray-400 mt-2">Try adjusting your search or filters</p>
         </div>

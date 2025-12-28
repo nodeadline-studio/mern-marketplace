@@ -37,7 +37,7 @@ export default function DeleteService({ serviceId, userId, onDeleted }) {
         onClick={clickButton}
         className="p-3 bg-white border border-gray-100 text-gray-400 hover:text-red-500 hover:border-red-100 hover:bg-red-50 rounded-xl transition-all shadow-sm flex items-center justify-center"
       >
-        🗑️
+        <i className="fa-solid fa-trash"></i>
       </button>
 
       {open && (
@@ -45,7 +45,7 @@ export default function DeleteService({ serviceId, userId, onDeleted }) {
           <div className="bg-white w-full max-w-sm rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300">
             <div className="p-8 text-center">
               <div className="w-20 h-20 bg-red-50 text-red-500 rounded-full flex items-center justify-center text-3xl mx-auto mb-6">
-                ⚠️
+                <i className="fa-solid fa-triangle-exclamation"></i>
               </div>
               <h2 className="text-2xl font-extrabold text-gray-900 mb-2">Delete Service?</h2>
               <p className="text-gray-500">

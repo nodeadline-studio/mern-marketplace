@@ -95,11 +95,11 @@ export default function Service() {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="flex items-center gap-2 text-gray-700">
-                      <span className="text-xl">🕒</span>
+                      <span className="text-xl"><i className="fa-regular fa-clock"></i></span>
                       <span className="font-medium">{service.deliveryTime} days delivery</span>
                     </div>
                     <div className="flex items-center gap-2 text-gray-700">
-                      <span className="text-xl">🔄</span>
+                      <span className="text-xl"><i className="fa-solid fa-arrows-rotate"></i></span>
                       <span className="font-medium">{service.revisions} Revisions</span>
                     </div>
                   </div>
@@ -107,7 +107,7 @@ export default function Service() {
                   {service.requirements && (
                     <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-100">
                       <h4 className="font-bold text-yellow-800 mb-1 flex items-center gap-2">
-                        <span>💡</span> Buyer Requirements
+                        <span><i className="fa-solid fa-lightbulb"></i></span> Buyer Requirements
                       </h4>
                       <p className="text-yellow-700 text-sm">{service.requirements}</p>
                     </div>
@@ -130,7 +130,7 @@ export default function Service() {
                     className="flex items-center gap-3 group"
                   >
                     <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 group-hover:bg-primary/10 group-hover:text-primary transition-colors">
-                      👤
+                      <i className="fa-solid fa-user"></i>
                     </div>
                     <span className="font-semibold text-gray-700 group-hover:text-primary transition-colors">
                       {service.seller.name}

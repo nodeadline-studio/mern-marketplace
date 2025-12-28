@@ -27,7 +27,7 @@ export default function Categories() {
         to="/services"
         className="group p-4 bg-gray-50 rounded-2xl border border-gray-100 text-center hover:bg-primary/10 hover:border-primary/20 transition-all"
       >
-        <span className="block text-2xl mb-2">🌐</span>
+        <span className="block text-2xl mb-2"><i className="fa-solid fa-globe"></i></span>
         <span className="font-bold text-gray-700 group-hover:text-primary transition-colors">All Services</span>
       </Link>
 
@@ -38,11 +38,11 @@ export default function Categories() {
           className="group p-4 bg-gray-50 rounded-2xl border border-gray-100 text-center hover:bg-primary/10 hover:border-primary/20 transition-all"
         >
           <span className="block text-2xl mb-2">
-            {/* Simple emoji mapping for categories or use a default */}
-            {item.toLowerCase().includes('design') ? '🎨' :
-              item.toLowerCase().includes('code') ? '💻' :
-                item.toLowerCase().includes('write') ? '✍️' :
-                  item.toLowerCase().includes('video') ? '🎥' : '📁'}
+            {/* Font Awesome mapping for categories */}
+            {item.toLowerCase().includes('design') ? <i className="fa-solid fa-palette"></i> :
+              item.toLowerCase().includes('code') ? <i className="fa-solid fa-laptop"></i> :
+                item.toLowerCase().includes('write') ? <i className="fa-solid fa-pen-nib"></i> :
+                  item.toLowerCase().includes('video') ? <i className="fa-solid fa-video"></i> : <i className="fa-solid fa-folder-open"></i>}
           </span>
           <span className="font-bold text-gray-700 group-hover:text-primary transition-colors capitalize">{item}</span>
         </Link>

@@ -40,7 +40,7 @@ export default function Search() {
   return (
     <div className="w-full relative">
       <div className="flex items-center bg-white rounded-2xl shadow-lg border border-gray-100 p-2 focus-within:ring-2 focus-within:ring-primary-light transition-all">
-        <span className="pl-4 text-gray-400">🔍</span>
+        <span className="pl-4 text-gray-400"><i className="fa-solid fa-magnifying-glass"></i></span>
         <input
           type="text"
           className="w-full py-3 px-4 bg-transparent text-gray-900 placeholder-gray-400 outline-none font-medium"

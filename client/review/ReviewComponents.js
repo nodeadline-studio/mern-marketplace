@@ -16,7 +16,7 @@ function StarRating({ rating, onRatingChange, readonly = false, size = 24 }) {
           onMouseLeave={() => !readonly && setHover(0)}
           style={{ fontSize: size }}
         >
-          ★
+          <i className="fa-solid fa-star"></i>
         </span>
       ))}
       <style>{`

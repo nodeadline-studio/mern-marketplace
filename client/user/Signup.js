@@ -34,7 +34,7 @@ export default function Signup() {
     return (
       <div className="max-w-md mx-auto mt-20 p-8 bg-white rounded-3xl shadow-2xl border border-gray-100 text-center animate-in zoom-in duration-300">
         <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center text-green-500 text-4xl mx-auto mb-6">
-          ✓
+          <i className="fa-solid fa-check"></i>
         </div>
         <h2 className="text-3xl font-extrabold text-gray-900 mb-2">Welcome Aboard!</h2>
         <p className="text-gray-500 mb-8">Your account has been created successfully. You're ready to start exploring the marketplace.</p>
@@ -89,7 +89,7 @@ export default function Signup() {
 
           {values.error && (
             <div className="bg-red-50 text-red-600 p-4 rounded-xl border border-red-100 text-sm font-medium">
-              ⚠️ {values.error}
+              <i className="fa-solid fa-triangle-exclamation"></i> {values.error}
             </div>
           )}
 

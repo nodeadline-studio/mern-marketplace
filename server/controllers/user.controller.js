@@ -49,8 +49,14 @@ const userByID = async (req, res, next, id) => {
 const read = (req, res) => {
   req.profile.hashed_password = undefined
   req.profile.salt = undefined
-  req.profile.stripe_seller = undefined
-  req.profile.stripe_customer = undefined
+
+  // Only hide stripe details if it's NOT the user themselves viewing
+  const isSelf = req.auth && req.auth._id == req.profile._id
+  if (!isSelf) {
+    req.profile.stripe_seller = undefined
+    req.profile.stripe_customer = undefined
+  }
+
   return res.json(req.profile)
 }
 
@@ -189,6 +195,12 @@ const createCharge = (req, res, next) => {
   })
 }
 
+const getStripeConfig = (req, res) => {
+  res.json({
+    client_id: config.stripe_connect_test_client_id
+  })
+}
+
 export default {
   create,
   userByID,
@@ -199,5 +211,6 @@ export default {
   isSeller,
   stripe_auth,
   stripeCustomer,
-  createCharge
+  createCharge,
+  getStripeConfig
 }

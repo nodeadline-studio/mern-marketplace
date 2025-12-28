@@ -86,13 +86,13 @@ export default function MyOrders() {
                   <p className="text-gray-900 font-black text-lg">${order.amount}</p>
                 </div>
                 <div className="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center text-gray-400 group-hover:bg-primary/10 group-hover:text-primary transition-all">
-                  →
+                  <i className="fa-solid fa-arrow-right"></i>
                 </div>
               </Link>
             ))
           ) : (
             <div className="p-20 text-center">
-              <div className="text-5xl mb-4">📦</div>
+              <div className="text-5xl mb-4"><i className="fa-solid fa-box"></i></div>
               <p className="text-gray-400 font-medium">You haven't placed any orders yet.</p>
               <Link to="/" className="text-primary font-bold hover:underline mt-2 inline-block">
                 Start browsing services

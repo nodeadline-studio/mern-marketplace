@@ -1,16 +1,23 @@
 import {
   CardElement,
+  Elements,
   useElements,
   useStripe
 } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
 import PropTypes from 'prop-types'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
+// Singleton pattern for stripe promise to avoid re-initializing on every render
+let stripePromiseInstance = null
 const getStripePromise = () => {
   const publishableKey = window.STRIPE_PUBLISHABLE_KEY
   if (!publishableKey) return null
-  return loadStripe(publishableKey)
+
+  if (!stripePromiseInstance) {
+    stripePromiseInstance = loadStripe(publishableKey)
+  }
+  return stripePromiseInstance
 }
 
 function CheckoutForm({ serviceId, displayAmount, requirements, deliveryDeadline, onSuccess, onError }) {
@@ -22,12 +29,20 @@ function CheckoutForm({ serviceId, displayAmount, requirements, deliveryDeadline
   const handleSubmit = async (event) => {
     event.preventDefault()
 
-    if (!stripe || !elements) return
+    if (!stripe || !elements) {
+      setError('Stripe has not loaded yet. Please wait a moment.')
+      return
+    }
 
     setProcessing(true)
     setError(null)
 
     const cardElement = elements.getElement(CardElement)
+    if (!cardElement) {
+      setError('Card element not found')
+      setProcessing(false)
+      return
+    }
 
     try {
       const response = await fetch('/api/checkout', {
@@ -48,53 +63,56 @@ function CheckoutForm({ serviceId, displayAmount, requirements, deliveryDeadline
       if (result.error) {
         setError(result.error)
         if (onError) onError(result)
-      } else {
-        const { clientSecret, orderId } = result
-
-        const confirmResult = await stripe.confirmCardPayment(clientSecret, {
-          payment_method: {
-            card: cardElement
-          }
-        })
-
-        if (confirmResult.error) {
-          setError(confirmResult.error.message)
-          if (onError) onError(confirmResult.error)
-          setProcessing(false)
-          return
-        }
-
-        if (confirmResult.paymentIntent?.status !== 'succeeded') {
-          setError('Payment not completed. Please try again.')
-          setProcessing(false)
-          return
-        }
-
-        const confirmResponse = await fetch('/api/checkout/confirm', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          credentials: 'include',
-          body: JSON.stringify({
-            paymentIntentId: confirmResult.paymentIntent.id,
-            orderId
-          })
-        })
-
-        const confirmBody = await confirmResponse.json()
-
-        if (confirmBody?.error) {
-          setError(confirmBody.error)
-          if (onError) onError(confirmBody)
-          setProcessing(false)
-          return
-        }
-
-        if (onSuccess) onSuccess({ orderId, paymentIntentId: confirmResult.paymentIntent.id })
+        setProcessing(false)
+        return
       }
+
+      const { clientSecret, orderId } = result
+
+      const confirmResult = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: cardElement
+        }
+      })
+
+      if (confirmResult.error) {
+        setError(confirmResult.error.message)
+        if (onError) onError(confirmResult.error)
+        setProcessing(false)
+        return
+      }
+
+      if (confirmResult.paymentIntent?.status !== 'succeeded') {
+        setError('Payment not completed. Status: ' + (confirmResult.paymentIntent?.status || 'unknown'))
+        setProcessing(false)
+        return
+      }
+
+      const confirmResponse = await fetch('/api/checkout/confirm', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          paymentIntentId: confirmResult.paymentIntent.id,
+          orderId
+        })
+      })
+
+      const confirmBody = await confirmResponse.json()
+
+      if (confirmBody?.error) {
+        setError(confirmBody.error)
+        if (onError) onError(confirmBody)
+        setProcessing(false)
+        return
+      }
+
+      if (onSuccess) onSuccess({ orderId, paymentIntentId: confirmResult.paymentIntent.id })
     } catch (err) {
-      setError('Payment failed. Please try again.')
+      console.error('Submission error:', err)
+      setError('An unexpected error occurred. Please try again.')
       if (onError) onError(err)
     }
 
@@ -114,7 +132,7 @@ function CheckoutForm({ serviceId, displayAmount, requirements, deliveryDeadline
 
       {error && (
         <div className="bg-red-50 text-red-600 p-4 rounded-xl border border-red-100 text-sm font-medium" role="alert">
-          ⚠️ {error}
+          <i className="fa-solid fa-triangle-exclamation"></i> {error}
         </div>
       )}
 
@@ -139,17 +157,16 @@ CheckoutForm.propTypes = {
 }
 
 export default function StripeCheckout(props) {
-  const stripePromise = getStripePromise()
+  // Memoize it so it doesn't re-run every parent render
+  const stripePromise = useMemo(() => getStripePromise(), [])
 
   if (!stripePromise) {
     return (
       <div className="bg-yellow-50 text-yellow-800 p-4 rounded-xl border border-yellow-100 text-sm font-medium">
-        Stripe is not configured. Set <strong>STRIPE_PUBLISHABLE_KEY</strong> on the server and reload.
+        <i className="fa-solid fa-triangle-exclamation"></i> Stripe is not configured. Set <strong>STRIPE_PUBLISHABLE_KEY</strong> on the server and reload.
       </div>
     )
   }
-
-  const { Elements } = require('@stripe/react-stripe-js')
 
   return (
     <Elements stripe={stripePromise}>
@@ -166,3 +183,4 @@ StripeCheckout.propTypes = {
   onSuccess: PropTypes.func,
   onError: PropTypes.func
 }
+

@@ -28,7 +28,7 @@ const createPaymentIntent = async (req, res) => {
     }
 
     // Verify service exists and has a valid price
-    const service = await Service.findById(serviceId).populate('seller', '_id').exec()
+    const service = await Service.findById(serviceId).populate('seller', '_id stripe_seller').exec()
     if (!service) {
       return res.status(404).json({ error: 'Service not found' })
     }
@@ -51,8 +51,9 @@ const createPaymentIntent = async (req, res) => {
 
     await order.save()
 
-    // Create Stripe PaymentIntent
-    const paymentIntent = await myStripe.paymentIntents.create({
+    // Determine if we can use Stripe Connect for automated payout
+    const sellerStripeId = service.seller?.stripe_seller?.stripe_user_id
+    const paymentIntentOptions = {
       amount: Math.round(price * 100), // Convert to cents
       currency: 'usd',
       metadata: {
@@ -61,7 +62,20 @@ const createPaymentIntent = async (req, res) => {
         buyerId: req.auth._id,
         sellerId: service.seller._id.toString()
       }
-    })
+    }
+
+    // If seller has connected their account, use destination charges
+    // We take a 10% fee for the platform
+    if (sellerStripeId) {
+      const platformFee = Math.round(price * 100 * 0.10)
+      paymentIntentOptions.transfer_data = {
+        destination: sellerStripeId,
+      }
+      paymentIntentOptions.application_fee_amount = platformFee
+    }
+
+    // Create Stripe PaymentIntent
+    const paymentIntent = await myStripe.paymentIntents.create(paymentIntentOptions)
 
     order.paymentId = paymentIntent.id
     order.updated = Date.now()
@@ -104,7 +118,7 @@ const confirmPayment = async (req, res) => {
     const paymentIntent = await myStripe.paymentIntents.retrieve(paymentIntentId)
 
     if (paymentIntent.status !== 'succeeded') {
-      return res.status(400).json({ error: 'Payment not confirmed' })
+      return res.status(400).json({ error: `Payment not confirmed. Current status: ${paymentIntent.status}` })
     }
 
     if (paymentIntent.metadata?.orderId !== order._id.toString()) {
@@ -115,17 +129,21 @@ const confirmPayment = async (req, res) => {
       return res.status(403).json({ error: 'Not authorized' })
     }
 
+    // Idempotency: If order is already in_progress or further, return success
+    if (['in_progress', 'completed', 'cancelled'].includes(order.status)) {
+      return res.status(200).json({ success: true, order, message: 'Order already processed' })
+    }
+
     // Update order status
-    const updatedOrder = await Order.findByIdAndUpdate(
-      order._id,
-      { status: 'in_progress', updated: Date.now() },
-      { new: true }
-    )
+    order.status = 'in_progress'
+    order.paymentId = paymentIntent.id
+    order.updated = Date.now()
+    const updatedOrder = await order.save()
 
     return res.status(200).json({ success: true, order: updatedOrder })
   } catch (err) {
-    console.error('Payment confirmation error:', err)
-    return res.status(500).json({ error: 'Payment confirmation failed' })
+    console.error('Confirm Payment error:', err)
+    return res.status(500).json({ error: 'Could not confirm payment' })
   }
 }
 

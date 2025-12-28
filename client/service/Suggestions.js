@@ -27,7 +27,7 @@ export default function Suggestions(props) {
                 </Link>
                 <div className="flex items-center justify-between mt-2">
                   <span className="text-primary font-bold text-sm">$ {service.price}</span>
-                  <span className="text-gray-400 text-xs">🕒 {service.deliveryTime}d</span>
+                  <span className="text-gray-400 text-xs"><i className="fa-regular fa-clock"></i> {service.deliveryTime}d</span>
                 </div>
               </div>
             </div>

@@ -175,7 +175,7 @@ export default function EditProfile() {
 
           {values.error && (
             <div className="bg-red-50 text-red-600 p-4 rounded-xl border border-red-100 text-sm font-medium animate-pulse">
-              ⚠️ {values.error}
+              <i className="fa-solid fa-triangle-exclamation"></i> {values.error}
             </div>
           )}
 

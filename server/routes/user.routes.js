@@ -15,6 +15,9 @@ router.route('/api/users/:userId')
 router.route('/api/stripe_auth/:userId')
   .put(authCtrl.requireSignin, authCtrl.hasAuthorization, userCtrl.stripe_auth, userCtrl.update)
 
+router.route('/api/stripe/config')
+  .get(authCtrl.requireSignin, userCtrl.getStripeConfig)
+
 router.param('userId', userCtrl.userByID)
 
 export default router

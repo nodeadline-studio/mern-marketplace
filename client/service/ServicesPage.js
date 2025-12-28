@@ -98,7 +98,7 @@ export default function ServicesPage() {
             </div>
           ) : error ? (
             <div className="bg-red-50 text-red-600 p-6 rounded-2xl text-center">
-              <span className="text-4xl block mb-2">⚠️</span>
+              <span className="text-4xl block mb-2"><i className="fa-solid fa-triangle-exclamation"></i></span>
               <p>{error}</p>
             </div>
           ) : (
